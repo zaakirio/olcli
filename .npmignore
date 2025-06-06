@@ -1,0 +1,36 @@
+# Source files
+src/
+
+# Development files
+.git/
+.gitignore
+.claude/
+.roo/
+.roomodes
+.taskmaster/
+.windsurfrules
+.cursor/
+.env*
+
+# Build tools
+tsconfig.json
+jest.config.js
+eslint.config.js
+
+# Development dependencies
+node_modules/
+
+# Tests
+**/*.test.ts
+**/*.test.tsx
+**/__tests__/
+
+# Task files
+tasks/
+prd.txt
+
+# Development artifacts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,11 +1,11 @@
 {
-  "name": "ollama-multi-chat",
+  "name": "olcli",
   "version": "1.0.0",
   "description": "CLI tool for simultaneous chat sessions with multiple Ollama models",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "ollama-chat": "dist/index.js"
+    "olcli": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -13,17 +13,39 @@
     "start": "node dist/index.js",
     "test": "jest",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build",
+    "prepack": "npm run build",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "ollama",
-    "cli",
+    "cli", 
     "chat",
     "ai",
-    "terminal"
+    "terminal",
+    "multi-model",
+    "llm",
+    "chatbot",
+    "profiles",
+    "templates"
   ],
-  "author": "",
+  "author": "Zaakirio",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zaakirio/olcli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zaakirio/olcli/issues"
+  },
+  "homepage": "https://github.com/zaakirio/olcli#readme",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "ink": "^5.2.1",
     "ink-select-input": "^6.2.0",

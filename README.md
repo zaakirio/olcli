@@ -72,33 +72,67 @@ ollama pull codellama:7b
 
 ## 📦 Installation
 
-### Option 1: Clone and Build
+### Option 1: Install from npm (Recommended)
+```bash
+# Install globally
+npm install -g ollama-multi-chat
+
+# Run the CLI
+olcli
+```
+
+### Option 2: Clone and Build
 ```bash
 git clone <repository-url>
 cd ollama-cli
 npm install
 npm run build
-npm link  # Optional: for global installation
+npm link  # Optional: for global installation (enables 'olcli' command)
 ```
 
-### Option 2: Direct Usage
+### Option 3: Direct Usage
 ```bash
 npm install
 npm run dev  # Development mode with hot reload
+```
+
+## 🚀 Quick Start
+
+```bash
+# Option 1: Install from npm (Recommended)
+npm install -g ollama-multi-chat
+olcli
+
+# Option 2: Local development
+git clone <repository-url>
+cd ollama-cli
+npm install
+npm run build
+npm link  # Enables 'olcli' command globally
+olcli
 ```
 
 ## 🚀 Usage
 
 ### Starting the Application
 ```bash
-# If globally installed
-ollama-chat
+# If globally installed (recommended)
+olcli
 
-# Or run directly
+# Or run directly from project directory
 npm start
 
-# Development mode
+# Development mode with hot reload
 npm run dev
+
+# Get help
+olcli --help
+
+# Show version
+olcli --version
+
+# List available models
+olcli --list-models
 ```
 
 ### Main Menu Navigation
@@ -287,6 +321,43 @@ ollama list
 2. **Use templates** to quickly switch between model sets
 3. **Profile system** reduces repetitive context setting
 4. **Export important chats** to preserve valuable conversations
+
+## 📦 Publishing to npm
+
+This project uses semantic versioning and automated publishing:
+
+### Version Management
+```bash
+# Patch version (1.0.0 -> 1.0.1)
+npm version patch
+
+# Minor version (1.0.0 -> 1.1.0)
+npm version minor
+
+# Major version (1.0.0 -> 2.0.0)
+npm version major
+```
+
+### Publishing Process
+```bash
+# 1. Ensure you're logged in to npm
+npm login
+
+# 2. Update version (automatically builds and commits)
+npm version patch
+
+# 3. Publish to npm
+npm publish
+
+# Or publish with tag
+npm publish --tag beta
+```
+
+### Pre-publish Checks
+The following happens automatically before publishing:
+- TypeScript type checking (`npm run typecheck`)
+- Build process (`npm run build`)
+- Git commit and tag creation
 
 ## 🤝 Contributing
 

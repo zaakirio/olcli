@@ -3,21 +3,15 @@ import React from 'react';
 import { render } from 'ink';
 import { App } from './App.js';
 
-// Check if stdin supports raw mode
-if (!process.stdin.isTTY) {
-  console.error('This application requires an interactive terminal (TTY)');
-  process.exit(1);
-}
-
-// Handle command line arguments
+// Handle command line arguments first
 const args = process.argv.slice(2);
 
 if (args.includes('--help') || args.includes('-h')) {
   console.log(`
-Ollama Multi-Chat CLI
+🦙 Ollama Multi-Chat CLI
 
 Usage:
-  ollama-chat [options]
+  olcli [options]
 
 Options:
   -h, --help               Display this help information
@@ -25,8 +19,8 @@ Options:
   --list-models            List all available Ollama models
 
 Examples:
-  ollama-chat              Start interactive model selection
-  ollama-chat --list-models    List available models
+  olcli                    Start interactive main menu
+  olcli --list-models      List available models
 `);
   process.exit(0);
 }
@@ -53,6 +47,12 @@ if (args.includes('--list-models')) {
     process.exit(1);
   }
 } else {
+  // Check if stdin supports raw mode for interactive app
+  if (!process.stdin.isTTY) {
+    console.error('This application requires an interactive terminal (TTY)');
+    process.exit(1);
+  }
+  
   // Start the interactive app
   render(<App />);
 }
