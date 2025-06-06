@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/zaakirio/olcli/compare/v1.0.0...v1.0.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* **package:** Renamed package ([70a37a4](https://github.com/zaakirio/olcli/commit/70a37a4b7542f8b577994b244b036de3231f57db))
+
 # 1.0.0 (2025-06-06)
 
 
