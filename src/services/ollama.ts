@@ -106,6 +106,67 @@ export class OllamaService {
     }
   }
 
+  async searchAvailableModels(query: string): Promise<string[]> {
+    try {
+      // First, try to fetch from Ollama library API to get available models
+      const response = await fetch('https://registry.ollama.ai/api/models');
+      if (response.ok) {
+        const data = await response.json() as { models?: Array<{ name: string }> };
+        if (data.models && Array.isArray(data.models)) {
+          return data.models
+            .filter((model) => 
+              model.name && model.name.toLowerCase().includes(query.toLowerCase())
+            )
+            .map((model) => model.name)
+            .slice(0, 10); // Limit to 10 suggestions
+        }
+      }
+    } catch {
+      // Fallback to common model patterns if API fails
+    }
+
+    // Fallback suggestions based on common model patterns
+    const commonModels = [
+      'llama3.2:3b', 'llama3.2:1b', 'llama3.1:8b', 'llama3.1:70b',
+      'phi3:mini', 'phi3:medium', 'phi3.5:3.8b',
+      'qwen2.5:7b', 'qwen2.5:14b', 'qwen2.5:32b',
+      'mistral:7b', 'mistral:instruct', 'mistral-nemo:12b',
+      'gemma2:9b', 'gemma2:27b', 'gemma:7b',
+      'deepseek-coder:6.7b', 'deepseek-coder:33b',
+      'codellama:7b', 'codellama:13b', 'codellama:34b',
+      'neural-chat:7b', 'openchat:7b', 'starling-lm:7b'
+    ];
+
+    return commonModels
+      .filter(model => model.toLowerCase().includes(query.toLowerCase()))
+      .slice(0, 5);
+  }
+
+  async validateModelName(modelName: string): Promise<{ isValid: boolean; suggestions: string[] }> {
+    const cleanName = modelName.trim().toLowerCase();
+    
+    // Basic format validation - should contain at least one colon for tag
+    if (!cleanName.includes(':')) {
+      const suggestions = await this.searchAvailableModels(cleanName);
+      return {
+        isValid: false,
+        suggestions
+      };
+    }
+
+    // Check if it follows valid model naming pattern
+    const modelPattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]*:[a-zA-Z0-9][a-zA-Z0-9._-]*$/;
+    if (!modelPattern.test(cleanName)) {
+      const suggestions = await this.searchAvailableModels(cleanName.split(':')[0]);
+      return {
+        isValid: false,
+        suggestions
+      };
+    }
+
+    return { isValid: true, suggestions: [] };
+  }
+
   async pullModel(modelName: string, onProgress?: (progress: number) => void): Promise<void> {
     try {
       const response = await fetch(`${this.baseUrl}/api/pull`, {

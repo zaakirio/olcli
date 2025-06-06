@@ -6,6 +6,47 @@ import { Template, OllamaModel, ModelStatus } from '../types.js';
 import { StorageService } from '../services/storage.js';
 import { OllamaService } from '../services/ollama.js';
 
+interface ModelSelectorProps {
+  availableModels: OllamaModel[];
+  selectedModelNames: string[];
+  onToggleModel: (modelName: string) => void;
+}
+
+const ModelSelector: React.FC<ModelSelectorProps> = ({
+  availableModels,
+  selectedModelNames,
+  onToggleModel,
+}) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useInput((input, key) => {
+    if (key.upArrow) {
+      setSelectedIndex(prev => (prev > 0 ? prev - 1 : availableModels.length - 1));
+    } else if (key.downArrow) {
+      setSelectedIndex(prev => (prev < availableModels.length - 1 ? prev + 1 : 0));
+    } else if (input === ' ') {
+      const selectedModel = availableModels[selectedIndex];
+      if (selectedModel) {
+        onToggleModel(selectedModel.name);
+      }
+    }
+  });
+
+  return (
+    <Box flexDirection="column">
+      {availableModels.map((model, index) => (
+        <Text
+          key={model.name}
+          color={index === selectedIndex ? 'cyan' : 'white'}
+          inverse={index === selectedIndex}
+        >
+          {selectedModelNames.includes(model.name) ? '✓' : '○'} {model.name}
+        </Text>
+      ))}
+    </Box>
+  );
+};
+
 interface TemplateManagerProps {
   onSelectTemplate: (template: Template | null) => void;
   onLoadTemplate: (models: ModelStatus[]) => void;
@@ -65,6 +106,23 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
         setSelectedTemplate(null);
         resetCreateForm();
       }
+    }
+    
+    // Handle Enter key for model selection completion
+    if (currentView === 'create' && createStep === 'models' && key.return && selectedModelNames.length > 0) {
+      handleCreateTemplate();
+    }
+    
+    // Handle Enter key for template loading
+    if (currentView === 'view' && selectedTemplate && key.return) {
+      handleLoadTemplate(selectedTemplate);
+    }
+    
+    // Handle delete key for template deletion
+    if (currentView === 'view' && selectedTemplate && input.toLowerCase() === 'd' && !selectedTemplate.isBuiltIn) {
+      handleDeleteTemplate(selectedTemplate);
+      setCurrentView('list');
+      setSelectedTemplate(null);
     }
   });
 
@@ -172,13 +230,10 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
           <Box flexDirection="column">
             <Text>Select Models (Space to toggle, Enter when done):</Text>
             <Box marginTop={1} />
-            <SelectInput
-              items={availableModels.map(model => ({
-                label: `${selectedModelNames.includes(model.name) ? '✓' : '○'} ${model.name}`,
-                value: model.name,
-              }))}
-              onSelect={(item) => {
-                const modelName = item.value;
+            <ModelSelector
+              availableModels={availableModels}
+              selectedModelNames={selectedModelNames}
+              onToggleModel={(modelName) => {
                 setSelectedModelNames(prev => 
                   prev.includes(modelName)
                     ? prev.filter(name => name !== modelName)

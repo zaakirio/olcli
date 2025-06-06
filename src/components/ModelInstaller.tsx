@@ -41,6 +41,28 @@ export const ModelInstaller: React.FC<ModelInstallerProps> = ({
       return;
     }
 
+    // Validate model name first
+    try {
+      const validation = await ollamaService.validateModelName(cleanModelName);
+      
+      if (!validation.isValid) {
+        let errorMsg = `'${cleanModelName}' doesn't appear to be a valid model name.`;
+        
+        if (validation.suggestions.length > 0) {
+          errorMsg += `\n\nDid you mean one of these?\n${validation.suggestions.map(s => `• ${s}`).join('\n')}`;
+        } else {
+          errorMsg += '\n\nModel names should include a tag (e.g., "llama3.2:3b", "phi3:mini").';
+        }
+        
+        onError(errorMsg);
+        return;
+      }
+    } catch (validationError) {
+      // If validation fails (e.g., network error), proceed with installation
+      // The actual pull will catch any real errors
+      console.warn('Model validation failed, proceeding with installation:', validationError);
+    }
+
     const newRequest: ModelInstallRequest = {
       name: cleanModelName,
       status: 'downloading',
@@ -84,7 +106,23 @@ export const ModelInstaller: React.FC<ModelInstallerProps> = ({
         )
       );
 
-      onError(`Failed to install '${cleanModelName}': ${errorMessage}`);
+      // Check if it's a "model not found" type error and provide suggestions
+      if (errorMessage.toLowerCase().includes('not found') || errorMessage.toLowerCase().includes('unknown model')) {
+        try {
+          const suggestions = await ollamaService.searchAvailableModels(cleanModelName.split(':')[0]);
+          let enhancedError = `Model '${cleanModelName}' not found.`;
+          
+          if (suggestions.length > 0) {
+            enhancedError += `\n\nSimilar models available:\n${suggestions.map(s => `• ${s}`).join('\n')}`;
+          }
+          
+          onError(enhancedError);
+        } catch {
+          onError(`Model '${cleanModelName}' not found. Please check the model name and try again.`);
+        }
+      } else {
+        onError(`Failed to install '${cleanModelName}': ${errorMessage}`);
+      }
     } finally {
       setIsInstalling(false);
     }

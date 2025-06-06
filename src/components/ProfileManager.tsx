@@ -60,6 +60,18 @@ export const ProfileManager: React.FC<ProfileManagerProps> = ({
         setCreateStep('name');
       }
     }
+    
+    // Handle Enter key for profile selection/actions
+    if (currentView === 'view' && selectedProfile && key.return) {
+      onSelectProfile(selectedProfile);
+    }
+    
+    // Handle delete key for profile deletion
+    if (currentView === 'view' && selectedProfile && input.toLowerCase() === 'd' && !selectedProfile.isBuiltIn) {
+      handleDeleteProfile(selectedProfile);
+      setCurrentView('list');
+      setSelectedProfile(null);
+    }
   });
 
   const handleCreateProfile = async () => {
