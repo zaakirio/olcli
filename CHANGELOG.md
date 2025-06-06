@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/zaakirio/olcli/compare/v1.0.1...v1.1.0) (2025-06-06)
+
+
+### Features
+
+* **name:** Adjusted name ([a861039](https://github.com/zaakirio/olcli/commit/a8610398566212e34fd02f6f2be94cbbac2bf7f8))
+
 ## [1.0.1](https://github.com/zaakirio/olcli/compare/v1.0.0...v1.0.1) (2025-06-06)
 
 
