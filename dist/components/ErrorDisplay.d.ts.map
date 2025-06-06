@@ -1,0 +1,1 @@
+{"version":3,"file":"ErrorDisplay.d.ts","sourceRoot":"","sources":["../../src/components/ErrorDisplay.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAG1B,UAAU,iBAAiB;IACzB,KAAK,EAAE,MAAM,CAAC;IACd,SAAS,CAAC,EAAE,MAAM,IAAI,CAAC;CACxB;AAED,eAAO,MAAM,YAAY,EAAE,KAAK,CAAC,EAAE,CAAC,iBAAiB,CA0BpD,CAAC"}
