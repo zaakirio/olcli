@@ -1,5 +1,5 @@
 {
-  "name": "olcli",
+  "name": "@zaakirio/olcli",
   "version": "1.0.0",
   "description": "CLI tool for simultaneous chat sessions with multiple Ollama models",
   "main": "dist/index.js",
